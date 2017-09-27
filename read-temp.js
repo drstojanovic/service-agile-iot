@@ -49,6 +49,7 @@ var readOptical = function() {
         .get(sensorTagDeviceId, 'Optical')
         .then(function(deviceComponent) {
             var value = parseFloat(deviceComponent.value);
+            value = round(value);
 
             if (DATA.optical !== value) {
                 //Send to server
@@ -109,13 +110,17 @@ var readHumidity = function() {
         });
 };
 
-//Every 3 seconds read values
+//Every 5 seconds read values
 setInterval(function(params) {
-    readTemperature();
     readOptical();
+}, 5 * 1000);
+
+//Every 5 minutes
+setInterval(function() {
     readPressure();
     readHumidity();
-}, 3 * 1000);
+    readTemperature();
+}, 5 * 60 * 1000);
 
 //Read right from beggining
 readTemperature();
