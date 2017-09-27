@@ -16,7 +16,8 @@ var round = function(value, precision) {
 };
 
 var sendUpdatedValueToServer = function(type, value) {
-    console.log('send update to server for ' + type + ' the new value is ' + value);
+    console.log('send update to server for ' + type + ' the new value is: ')
+    console.log(value);
     var path = HOUSE_ID + '/' + type;
     Firebase.sendMessage(path, value);
 };
@@ -38,7 +39,6 @@ var readTemperature = function() {
 
             //Set for next check
             DATA.temperature = value;
-            console.log(deviceComponent);
         }).catch(function(err) {
             console.log(err);
         });
@@ -70,7 +70,7 @@ var readPressure = function() {
         .get(sensorTagDeviceId, 'Pressure')
         .then(function(deviceComponent) {
             var value = parseFloat(deviceComponent.value);
-            value = round(value, 2);
+            value = round(value, 1);
 
             if (DATA.pressure !== value) {
                 //Send to server
