@@ -176,5 +176,7 @@ Firebase.onCommand(HOUSE_ID, function(command) {
         Devices.start(agile);
     } else if (command.type === 'discovery_off') {
         Devices.stop(agile);
+    } else if (command.type === 'register_device') {
+        Devices.register(agile, command.id);
     }
 });

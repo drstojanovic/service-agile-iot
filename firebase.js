@@ -12,8 +12,8 @@ var database = firebase.database();
 Firebase = {};
 
 Firebase.sendMessage = function(path, data) {
-    console.log(path);
-    console.log(data);
+    // console.log(path);
+    // console.log(data);
     database.ref(path).update(data);
 };
 
