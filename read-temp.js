@@ -171,6 +171,12 @@ agile.device.subscribe(sensorTagDeviceId, 'Temperature')
         };
     });
 
+Firebase.on(HOUSE_ID + '/registered', function(registered) {
+    //Start reading for all registered devices values
+    console.log('start reading from devices');
+    console.log(registered);
+});
+
 Firebase.onCommand(HOUSE_ID, function(command) {
     if (command.type === 'discovery_on') {
         Devices.start(agile);

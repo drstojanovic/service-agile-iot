@@ -11,11 +11,27 @@ var database = firebase.database();
 
 Firebase = {};
 
+Firebase.readOnce = function(path, cb) {
+    database.ref(path).once('value')
+        .then(function(snapshot) {
+            cb(snapshot.val());
+        });
+};
+
 Firebase.sendMessage = function(path, data) {
     // console.log(path);
     // console.log(data);
-    database.ref(path).update(data);
+    database.ref(path).set(data);
 };
+
+Firebase.on = function(path, cb) {
+    var ref = database.ref(path);
+    ref.on('value', function(snapshot) {
+        var value = snapshot.val();
+        cb(value);
+    });
+};
+
 
 Firebase.onCommand = function(path, cb) {
     var commandRef = database.ref(path + '/command');

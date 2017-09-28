@@ -68,6 +68,15 @@ Devices.register = function(agile, id) {
         .then(function(newDevice) {
             console.log('New device registered');
             console.log(newDevice);
+
+            //Send this to firebase
+            Firebase.readOnce(global.HOUSE_ID + '/registered', function(registered) {
+
+                registered = registered || [];
+                registered.push(newDevice);
+
+                Firebase.sendMessage(global.HOUSE_ID + '/registered', registered);
+            });
         });
 };
 
