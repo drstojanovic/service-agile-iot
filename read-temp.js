@@ -35,9 +35,13 @@ Firebase.on(HOUSE_ID + '/registered', function(registered) {
 
     for (var i = 0; i < registered.length; i++) {
         var id = registered[i].deviceId;
-        for (var j = 0; j < registered[i].streams.length; j++) {
-            Devices.subscribeToDeviceTopic(id, registered[i].streams[j].id);
-        }
+
+        agile.device.connect(id).then(function() {
+            for (var j = 0; j < registered[i].streams.length; j++) {
+                Devices.subscribeToDeviceTopic(id, registered[i].streams[j].id);
+            }
+            console.log('Connected! - ' + id);
+        });
     }
 
     oldRegistered = registered;
