@@ -103,7 +103,7 @@ var sendUpdatedValueToServer = function(type, value) {
     Firebase.sendMessage(path, value);
 };
 
-Device.subscribeToDeviceTopic = function(deviceId, topic) {
+Devices.subscribeToDeviceTopic = function(deviceId, topic) {
     var lowercaseTopic = topic.toLowerCase();
     agile.device.subscribe(deviceId, topic)
         .then(function(stream) {
