@@ -115,23 +115,58 @@ var readHumidity = function() {
         });
 };
 
-//Every 5 seconds read values
-setInterval(function(params) {
-    readOptical();
-}, 5 * 1000);
+// //Every 5 seconds read values
+// setInterval(function(params) {
+//     readOptical();
+// }, 5 * 1000);
 
-//Every 5 minutes
-setInterval(function() {
-    readPressure();
-    readHumidity();
-    readTemperature();
-}, 5 * 60 * 1000);
+// //Every 5 minutes
+// setInterval(function() {
+//     readPressure();
+//     readHumidity();
+//     readTemperature();
+// }, 5 * 60 * 1000);
 
-//Read right from beggining
-readTemperature();
-readOptical();
-readPressure();
-readHumidity();
+// //Read right from beggining
+// readTemperature();
+// readOptical();
+// readPressure();
+// readHumidity();
+
+agile.device.subscribe(sensorTagDeviceId, 'Temperature')
+    .then(function(stream) {
+        stream.onerror = function() {
+            console.log('Connection Error');
+        };
+
+        stream.onopen = function() {
+            console.log('WebSocket Client Connected');
+        };
+
+        stream.onclose = function() {
+            console.log('echo-protocol Client Closed');
+        };
+
+        stream.onmessage = function(e) {
+            if (typeof e.data === 'string') {
+                console.log("Received: '" + e.data + "'");
+                var value = parseFloat(e.data);
+                value = round(value, 1);
+
+                // if (DATA.temperature !== value) {
+                //Send to server
+                sendUpdatedValueToServer('temperature', {
+                    // value: value,
+                    value: e.data,
+                    unit: deviceComponent.unit
+                });
+                // }
+
+                //Set for next check
+                DATA.temperature = value;
+            }
+        };
+    });
 
 Firebase.onCommand(HOUSE_ID, function(command) {
     if (command.type === 'discovery_on') {
