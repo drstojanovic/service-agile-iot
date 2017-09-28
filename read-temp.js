@@ -135,16 +135,19 @@ var readHumidity = function() {
 
 agile.device.subscribe(sensorTagDeviceId, 'Temperature')
     .then(function(stream) {
-        stream.onerror = function() {
+        stream.onerror = function(e) {
             console.log('Connection Error');
+            console.log(e);
         };
 
-        stream.onopen = function() {
+        stream.onopen = function(e) {
             console.log('WebSocket Client Connected');
+            console.log(e);
         };
 
-        stream.onclose = function() {
+        stream.onclose = function(e) {
             console.log('echo-protocol Client Closed');
+            console.log(e);
         };
 
         stream.onmessage = function(e) {

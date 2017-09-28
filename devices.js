@@ -2,8 +2,10 @@ var Firebase = require('./firebase');
 
 var Devices = {};
 
+var devicePollInterval = null;
+
 function devicePoll(agile) {
-    setInterval(function() {
+    devicePollInterval = setInterval(function() {
         agile.protocolManager.devices()
             .then(function(devices) {
                 // console.log(devices);
@@ -32,6 +34,7 @@ Devices.start = function start(agile) {
 };
 
 Devices.stop = function(agile) {
+    clearInterval(devicePollInterval);
     agile.protocolManager.discovery.stop().then(function() {
         console.log('Discovery is off');
     }).catch(function(err) {
