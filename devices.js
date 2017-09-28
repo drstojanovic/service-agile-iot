@@ -53,7 +53,7 @@ Devices.stop = function(agile) {
     });
 };
 
-Device.register = function(agile, id) {
+Devices.register = function(agile, id) {
     //Find this device in array by id
 
     var deviceOverview = {
