@@ -108,18 +108,15 @@ Devices.subscribeToDeviceTopic = function(deviceId, topic) {
     agile.device.subscribe(deviceId, topic)
         .then(function(stream) {
             stream.onerror = function(e) {
-                console.log('Connection Error');
-                console.log(e);
+                console.log('Connection Error: ' + deviceId + ' - ' + topic);
             };
 
             stream.onopen = function(e) {
-                console.log('WebSocket Client Connected');
-                console.log(e);
+                console.log('WebSocket Client Connected: ' + deviceId + ' - ' + topic);
             };
 
             stream.onclose = function(e) {
-                console.log('echo-protocol Client Closed');
-                console.log(e);
+                console.log('echo-protocol Client Closed: ' + deviceId + ' - ' + topic);
             };
 
             stream.onmessage = function(e) {
