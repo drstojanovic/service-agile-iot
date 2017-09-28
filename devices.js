@@ -53,21 +53,26 @@ Devices.stop = function(agile) {
     });
 };
 
-Devices.register = function(agile, id) {
+Devices.register = function(agile, id, type) {
     //Find this device in array by id
+    var device = null;
+    for (var i = 0; i < devicesFound.length; i++) {
+        if (devicesFound[i].id == id) {
+            device = devicesFound[i];
+            break;
+        }
+    }
 
-    var deviceOverview = {
-        "name": "CC2650 SensorTag",
-        "protocol": "iot.agile.protocol.BLE",
-        "id": "B0:91:22:F7:3E:80",
-        "status": "CONNECTED"
-    };
-    var type = "TI SensorTag";
+    if (!device) {
+        console.log('reguested device not found');
+        return;
+    }
 
-    agile.deviceManager.create(deviceOverview, type)
+    agile.deviceManager.create(device, type)
         .then(function(newDevice) {
             console.log('New device registered');
             console.log(newDevice);
+            newDevice.type = type;
 
             //Send this to firebase
             Firebase.readOnce(global.HOUSE_ID + '/registered', function(registered) {
