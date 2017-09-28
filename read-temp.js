@@ -41,6 +41,9 @@ Firebase.on(HOUSE_ID + '/registered', function(registered) {
                 Devices.subscribeToDeviceTopic(id, registered[i].streams[j].id);
             }
             console.log('Connected! - ' + id);
+        }).catch(function(err) {
+            console.log('failed to connect to - ' + id);
+            console.log(err);
         });
     }
 
