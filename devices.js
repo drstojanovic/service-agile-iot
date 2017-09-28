@@ -5,6 +5,12 @@ var Devices = {};
 var devicePollInterval = null;
 
 var devicesFound = [];
+var DATA = {};
+
+var round = function(value, precision) {
+    var multiplier = Math.pow(10, precision || 0);
+    return Math.round(value * multiplier) / multiplier;
+};
 
 function devicePoll(agile) {
     devicePollInterval = setInterval(function() {
@@ -82,6 +88,59 @@ Devices.register = function(agile, id, type) {
 
                 Firebase.sendMessage(global.HOUSE_ID + '/registered', registered);
             });
+        });
+};
+
+Devices.unsubscribe = function(deviceId, topic) {
+    agile.device.unsubscribe(deviceId, topic)
+        .then(function() {});
+};
+
+var sendUpdatedValueToServer = function(type, value) {
+    console.log('send update to server for ' + type + ' the new value is: ')
+    console.log(value);
+    var path = global.HOUSE_ID + '/' + type;
+    Firebase.sendMessage(path, value);
+};
+
+Device.subscribeToDeviceTopic = function(deviceId, topic) {
+    var lowercaseTopic = topic.toLowerCase();
+    agile.device.subscribe(deviceId, topic)
+        .then(function(stream) {
+            stream.onerror = function(e) {
+                console.log('Connection Error');
+                console.log(e);
+            };
+
+            stream.onopen = function(e) {
+                console.log('WebSocket Client Connected');
+                console.log(e);
+            };
+
+            stream.onclose = function(e) {
+                console.log('echo-protocol Client Closed');
+                console.log(e);
+            };
+
+            stream.onmessage = function(e) {
+                if (typeof e.data === 'string') {
+                    console.log("Received: '" + e.data + "'");
+                    var value = parseFloat(e.data);
+                    value = round(value, 2);
+
+                    if (DATA[lowercaseTopic] !== value) {
+                        //Send to server
+                        sendUpdatedValueToServer(lowercaseTopic, {
+                            // value: value,
+                            value: e.data,
+                            unit: deviceComponent.unit
+                        });
+                    }
+
+                    //Set for next check
+                    DATA[lowercaseTopic] = value;
+                }
+            };
         });
 };
 
