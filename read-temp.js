@@ -1,5 +1,7 @@
 var agileSDK = require('agile-sdk');
 
+var Devices = require('./devices');
+
 var Firebase = require('./firebase');
 
 var agile = agileSDK({
@@ -9,6 +11,9 @@ var sensorTagDeviceId = 'bleB09122F73E80';
 
 var DATA = {};
 var HOUSE_ID = 1;
+
+global.HOUSE_ID = HOUSE_ID;
+global.agile = agile;
 
 var round = function(value, precision) {
     var multiplier = Math.pow(10, precision || 0);
@@ -127,3 +132,11 @@ readTemperature();
 readOptical();
 readPressure();
 readHumidity();
+
+Firebase.onCommand(HOUSE_ID, function(command) {
+    if (command.type === 'discovery_on') {
+        Devices.start(agile);
+    } else if (command.type === 'discovery_off') {
+        Devices.stop(agile);
+    }
+});
