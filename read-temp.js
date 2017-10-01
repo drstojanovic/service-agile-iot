@@ -32,7 +32,7 @@ var startReading = function() {
 
     for (var k in registered) {
         if (registered.hasOwnProperty(k)) {
-            Devices.connect(agile, registered[k].deviceId, registered[i].streams);
+            Devices.connect(agile, registered[k].deviceId, registered[k].streams);
         }
     }
     // for (var i = 0; i < registered.length; i++) {
@@ -45,12 +45,14 @@ var startReading = function() {
 Firebase.on(HOUSE_ID + '/registered', function(newRegistered) {
     //Start reading for all registered devices values
     registered = newRegistered;
-    // startReading();
 });
 
 //Turn on discovery right away
 Devices.startDiscovery(agile, function() {
     console.log('Discovery turned on on init');
+    if (registered.length > 0) {
+        startReading();
+    }
 });
 
 Firebase.onCommand(HOUSE_ID, function(command) {
