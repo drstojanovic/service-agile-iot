@@ -12,7 +12,7 @@ var round = function(value, precision) {
     return Math.round(value * multiplier) / multiplier;
 };
 
-function devicePoll(agile) {
+Devices.devicePool = function devicePoll(agile) {
     devicePollInterval = setInterval(function() {
         agile.protocolManager.devices()
             .then(function(devices) {
@@ -26,23 +26,25 @@ function devicePoll(agile) {
                 console.log(err);
             });
     }, 5000);
-}
-
-Devices.start = function start(agile) {
-    agile.protocolManager.discovery.start().then(function() {
-        console.log('All protocols are running discovery is on');
-        devicePoll(agile);
-    }).catch(function(err) {
-        console.log(err);
-        // keep running trying discovery is turned on
-        setTimeout(function() {
-            console.log('retrying');
-            Devices.start(agile);
-        }, 1000);
-    });
 };
 
-Devices.stop = function(agile) {
+Devices.startDiscovery = function startDiscovery(agile, cb) {
+    return agile.protocolManager.discovery.start()
+        .then(function() {
+            console.log('All protocols are running discovery is on');
+            // devicePoll(agile);
+            cb();
+        }).catch(function(err) {
+            console.log(err);
+            // keep trying to turn on discovery
+            setTimeout(function() {
+                console.log('retrying');
+                Devices.startDiscovery(agile);
+            }, 1000);
+        });
+};
+
+Devices.stopDiscovery = function(agile) {
     clearInterval(devicePollInterval);
     agile.protocolManager.discovery.stop().then(function() {
         console.log('Discovery is off');
@@ -54,7 +56,7 @@ Devices.stop = function(agile) {
         // keep running trying discovery is turned on
         setTimeout(function() {
             console.log('retrying stop');
-            Devices.stop(agile);
+            Devices.stopDiscovery(agile);
         }, 1000);
     });
 };
@@ -103,7 +105,6 @@ Devices.unsubscribe = function(deviceId, topic) {
         .then(function() {});
 };
 
-
 Devices.connect = function(agile, id, streams) {
     if (!id) {
         console.log('id is required');
@@ -113,7 +114,10 @@ Devices.connect = function(agile, id, streams) {
     agile.device.connect(id)
         .then(function(newDevice) {
             console.log('Device ' + id + ' connected!');
-
+            if (!streams) {
+                return;
+            }
+            
             //Subscribe to all streams
             console.log('Subscribe to all streams of device');
             for (var j = 0; j < streams.length; j++) {
@@ -124,7 +128,7 @@ Devices.connect = function(agile, id, streams) {
             // keep running trying discovery is turned on
             setTimeout(function() {
                 console.log('retrying to connect ' + id);
-                Devices.connect(agile, id);
+                Devices.connect(agile, id, streams);
             }, 1000);
         });
 };

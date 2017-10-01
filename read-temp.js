@@ -39,14 +39,19 @@ Firebase.on(HOUSE_ID + '/registered', function(newRegistered) {
     console.log('start reading from devices');
     console.log(registered);
     registered = newRegistered;
-    startReading();
+    // startReading();
 });
+
+//Turn on discovery right away
+Devices.startDiscovery(agile);
 
 Firebase.onCommand(HOUSE_ID, function(command) {
     if (command.type === 'discovery_on') {
-        Devices.start(agile);
+        Devices.startDiscovery(agile, function() {
+            Devices.devicePool(agile);
+        });
     } else if (command.type === 'discovery_off') {
-        Devices.stop(agile);
+        Devices.stopDiscovery(agile);
     } else if (command.type === 'register_device') {
         Devices.register(agile, command.id, command.deviceType);
     } else if (command.type === 'start_reading') {

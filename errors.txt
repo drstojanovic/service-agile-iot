@@ -7,3 +7,6 @@ data:
       { code: 'INTERNAL_SERVER_ERROR',
         message: 'Error Executing Method iot.agile.Protocol.Connect: Failed to connect device:B0:91:22:F7:3E:80' } } }
 
+ data:
+      { code: 'INTERNAL_SERVER_ERROR',
+        message: 'No reply within specified time' } } }
