@@ -96,7 +96,21 @@ Devices.register = function(agile, device, type, cb) {
     console.log(device);
     console.log(type);
 
-    agile.deviceManager.create(device, type)
+    /* const deviceOverview = {
+     *   "name": "CC2650 SensorTag",
+     *   "protocol": "iot.agile.protocol.BLE",
+     *   "id": "B0:B4:48:BD:10:85",
+     *   "status": "CONNECTED"
+     * };
+     * const type = "TI SensorTag";
+     */
+    var createDevice = {
+        name: device.name,
+        protocol: device.protocol,
+        id: device.id
+    };
+
+    agile.deviceManager.create(createDevice, type)
         .then(function(newDevice) {
             console.log('New device registered');
             console.log(newDevice);
