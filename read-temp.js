@@ -16,6 +16,7 @@ global.agile = agile;
 
 var oldRegistered = [];
 var registered = [];
+var discoveryOn = false;
 
 var startReading = function() {
 
@@ -45,11 +46,15 @@ var startReading = function() {
 Firebase.on(HOUSE_ID + '/registered', function(newRegistered) {
     //Start reading for all registered devices values
     registered = newRegistered;
+    if (discoveryOn) {
+        startReading();
+    }
 });
 
 //Turn on discovery right away
 Devices.startDiscovery(agile, function() {
     console.log('Discovery turned on on init');
+    discoveryOn = true;
     if (registered.length > 0) {
         startReading();
     }
