@@ -61,7 +61,22 @@ Devices.stopDiscovery = function(agile) {
     });
 };
 
-Devices.register = function(agile, id, type) {
+Devices.registerNewDevice = function(agile, id, type) {
+    Devices.register(agile, id, type, function(newDevice) {
+
+        //Send this to firebase
+        Firebase.readOnce(global.HOUSE_ID + '/registered', function(registered) {
+
+            registered = registered || [];
+            registered.push(newDevice);
+
+            Firebase.sendMessage(global.HOUSE_ID + '/registered', registered);
+        });
+    });
+};
+
+
+Devices.register = function(agile, id, type, cb) {
     //Find this device in array by id
     var device = null;
     for (var i = 0; i < devicesFound.length; i++) {
@@ -76,20 +91,19 @@ Devices.register = function(agile, id, type) {
         return;
     }
 
+    console.log('Register device: ');
+    console.log(device);
+    console.log(type);
+
     agile.deviceManager.create(device, type)
         .then(function(newDevice) {
             console.log('New device registered');
             console.log(newDevice);
             newDevice.type = type;
 
-            //Send this to firebase
-            Firebase.readOnce(global.HOUSE_ID + '/registered', function(registered) {
-
-                registered = registered || [];
-                registered.push(newDevice);
-
-                Firebase.sendMessage(global.HOUSE_ID + '/registered', registered);
-            });
+            if (cb) {
+                cb(newDevice);
+            }
         }).catch(function(err) {
             console.log(err);
             // keep running trying discovery is turned on

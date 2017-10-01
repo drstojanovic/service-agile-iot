@@ -43,11 +43,24 @@ var startReading = function() {
     oldRegistered = registered;
 };
 
+var registerDevices = function(registered) {
+
+    for (var k in registered) {
+        if (registered.hasOwnProperty(k)) {
+            //DevicesFound might be empty in devices.js
+            Devices.register(agile, registered[k].deviceId, registered[k].type);
+        }
+    }
+    setTimeout(function() {
+        startReading();
+    }, 3 * 1000);
+};
+
 Firebase.on(HOUSE_ID + '/registered', function(newRegistered) {
     //Start reading for all registered devices values
     registered = newRegistered;
     if (discoveryOn) {
-        startReading();
+        registerDevices(registered);
     }
 });
 
@@ -56,7 +69,7 @@ Devices.startDiscovery(agile, function() {
     console.log('Discovery turned on on init');
     discoveryOn = true;
     if (registered.length > 0) {
-        startReading();
+        registerDevices(registered);
     }
 });
 
@@ -68,7 +81,7 @@ Firebase.onCommand(HOUSE_ID, function(command) {
     } else if (command.type === 'discovery_off') {
         Devices.stopDiscovery(agile);
     } else if (command.type === 'register_device') {
-        Devices.register(agile, command.id, command.deviceType);
+        Devices.registerNewDevice(agile, command.id, command.deviceType);
     } else if (command.type === 'start_reading') {
         startReading();
     }
