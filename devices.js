@@ -107,7 +107,8 @@ Devices.register = function(agile, device, type, cb) {
     var createDevice = {
         name: device.name,
         protocol: device.protocol,
-        id: device.id
+        id: device.id,
+        status: 'CONNECTED'
     };
 
     agile.deviceManager.create(createDevice, type)
@@ -156,6 +157,7 @@ Devices.connect = function(agile, id, streams) {
             }
         }).catch(function(err) {
             console.log(err);
+            // console.log(err.response.data);
             // keep running trying discovery is turned on
             setTimeout(function() {
                 console.log('retrying to connect ' + id);
@@ -194,7 +196,7 @@ Devices.subscribeToDeviceTopic = function(deviceId, topic) {
                     var deviceComponent = {
                         value: 0,
                         unit: '_'
-                    }
+                    };
                     try {
                         deviceComponent = JSON.parse(e.data);
                     } catch (e) {
