@@ -84,7 +84,7 @@ Devices.registerNewDevice = function(agile, id, type) {
     });
 };
 
-
+var maxRegisterTryCount = 5;
 Devices.register = function(agile, device, type, cb) {
 
     if (!device) {
@@ -121,11 +121,16 @@ Devices.register = function(agile, device, type, cb) {
                 cb(newDevice);
             }
         }).catch(function(err) {
-            console.log(err.response.data);
+            console.log(err);
+            maxRegisterTryCount--;
+            if (maxRegisterTryCount < 1) {
+                return;
+            }
             // keep running trying discovery is turned on
             setTimeout(function() {
                 console.log('retrying');
                 Devices.register(agile, device, type);
+
             }, 1000);
         });
 };
