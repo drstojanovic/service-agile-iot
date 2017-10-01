@@ -88,6 +88,13 @@ Devices.register = function(agile, id, type) {
 
                 Firebase.sendMessage(global.HOUSE_ID + '/registered', registered);
             });
+        }).catch(function(err) {
+            console.log(err);
+            // keep running trying discovery is turned on
+            setTimeout(function() {
+                console.log('retrying');
+                Devices.register(agile, id, type);
+            }, 1000);
         });
 };
 
@@ -95,6 +102,33 @@ Devices.unsubscribe = function(deviceId, topic) {
     agile.device.unsubscribe(deviceId, topic)
         .then(function() {});
 };
+
+
+Devices.connect = function(agile, id, streams) {
+    if (!id) {
+        console.log('id is required');
+        return;
+    }
+
+    agile.device.connect(id)
+        .then(function(newDevice) {
+            console.log('Device ' + id + ' connected!');
+
+            //Subscribe to all streams
+            console.log('Subscribe to all streams of device');
+            for (var j = 0; j < streams.length; j++) {
+                Devices.subscribeToDeviceTopic(id, streams[j].id);
+            }
+        }).catch(function(err) {
+            console.log(err);
+            // keep running trying discovery is turned on
+            setTimeout(function() {
+                console.log('retrying to connect ' + id);
+                Devices.connect(agile, id);
+            }, 1000);
+        });
+};
+
 
 var sendUpdatedValueToServer = function(type, value) {
     console.log('send update to server for ' + type + ' the new value is: ')
