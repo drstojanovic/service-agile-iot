@@ -1,4 +1,5 @@
 var Firebase = require('./firebase');
+var request = require('request');
 
 var Devices = {};
 
@@ -111,16 +112,15 @@ Devices.register = function(agile, device, type, cb) {
         status: 'CONNECTED'
     };
 
-    agile.deviceManager.create(createDevice, type)
-        .then(function(newDevice) {
-            console.log('New device registered');
-            console.log(newDevice);
-            newDevice.type = type;
-
-            if (cb) {
-                cb(newDevice);
-            }
-        }).catch(function(err) {
+    request({
+        method: 'POST',
+        uri: global.api + '/api/devices/register/',
+        json: {
+            type: type,
+            overview: createDevice
+        }
+    }, function(err, response, data) {
+        if (err) {
             console.log(err);
             maxRegisterTryCount--;
             if (maxRegisterTryCount < 1) {
@@ -132,7 +132,17 @@ Devices.register = function(agile, device, type, cb) {
                 Devices.register(agile, device, type);
 
             }, 1000);
-        });
+            return;
+        }
+
+        console.log('New device registered');
+        console.log(newDevice);
+        newDevice.type = type;
+
+        if (cb) {
+            cb(newDevice);
+        }
+    });
 };
 
 Devices.unsubscribe = function(deviceId, topic) {

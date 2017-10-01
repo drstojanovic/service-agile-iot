@@ -4,8 +4,10 @@ var Devices = require('./devices');
 
 var Firebase = require('./firebase');
 
+global.api = 'http://127.0.0.1:8080';
+
 var agile = agileSDK({
-    api: 'http://127.0.0.1:8080'
+    api: global.api
 });
 var sensorTagDeviceId = 'bleB09122F73E80';
 
