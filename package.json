@@ -1,5 +1,5 @@
 {
-  "name": "rpi",
+  "name": "iot-test",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "agile-sdk": "^1.2.1",
+    "agile-sdk": "git+https://github.com/nemanja-popovic/agile-sdk.git",
     "firebase": "^4.4.0",
     "lodash": "^4.17.4",
     "request": "^2.83.0"
