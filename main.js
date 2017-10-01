@@ -48,7 +48,7 @@ var registerDevices = function(registered) {
     for (var k in registered) {
         if (registered.hasOwnProperty(k)) {
             //DevicesFound might be empty in devices.js
-            Devices.register(agile, registered[k].deviceId, registered[k].type);
+            Devices.register(agile, registered[k], registered[k].type);
         }
     }
     setTimeout(function() {

@@ -62,7 +62,16 @@ Devices.stopDiscovery = function(agile) {
 };
 
 Devices.registerNewDevice = function(agile, id, type) {
-    Devices.register(agile, id, type, function(newDevice) {
+    //Find this device in array by id
+    var device = null;
+    for (var i = 0; i < devicesFound.length; i++) {
+        if (devicesFound[i].id == id) {
+            device = devicesFound[i];
+            break;
+        }
+    }
+
+    Devices.register(agile, device, type, function(newDevice) {
 
         //Send this to firebase
         Firebase.readOnce(global.HOUSE_ID + '/registered', function(registered) {
@@ -76,15 +85,7 @@ Devices.registerNewDevice = function(agile, id, type) {
 };
 
 
-Devices.register = function(agile, id, type, cb) {
-    //Find this device in array by id
-    var device = null;
-    for (var i = 0; i < devicesFound.length; i++) {
-        if (devicesFound[i].id == id) {
-            device = devicesFound[i];
-            break;
-        }
-    }
+Devices.register = function(agile, device, type, cb) {
 
     if (!device) {
         console.log('reguested device not found');
@@ -105,11 +106,11 @@ Devices.register = function(agile, id, type, cb) {
                 cb(newDevice);
             }
         }).catch(function(err) {
-            console.log(err);
+            console.log(err.response.data);
             // keep running trying discovery is turned on
             setTimeout(function() {
                 console.log('retrying');
-                Devices.register(agile, id, type);
+                Devices.register(agile, device, type);
             }, 1000);
         });
 };
