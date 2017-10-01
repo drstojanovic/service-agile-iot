@@ -26,6 +26,9 @@ var startReading = function() {
     //         Devices.unsubscribe(id, oldRegistered[k].streams[p].id);
     //     }
     // }
+    
+    console.log('start reading from devices');
+    console.log(registered);
 
     for (var i = 0; i < registered.length; i++) {
         Devices.connect(agile, registered[i].deviceId, registered[i].streams);
@@ -36,8 +39,6 @@ var startReading = function() {
 
 Firebase.on(HOUSE_ID + '/registered', function(newRegistered) {
     //Start reading for all registered devices values
-    console.log('start reading from devices');
-    console.log(registered);
     registered = newRegistered;
     // startReading();
 });

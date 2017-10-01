@@ -111,6 +111,8 @@ Devices.connect = function(agile, id, streams) {
         return;
     }
 
+    console.log('Trying to connect device: ' + id);
+
     agile.device.connect(id)
         .then(function(newDevice) {
             console.log('Device ' + id + ' connected!');
