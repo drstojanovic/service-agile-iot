@@ -156,14 +156,15 @@ Devices.subscribeToDeviceTopic = function(deviceId, topic) {
             stream.onmessage = function(e) {
                 if (typeof e.data === 'string') {
                     console.log("Received: '" + e.data + "'");
-                    var value = parseFloat(e.data);
+                    var deviceComponent = e.data;
+                    var value = parseFloat(deviceComponent.value);
                     value = round(value, 2);
 
                     if (DATA[lowercaseTopic] !== value) {
                         //Send to server
                         sendUpdatedValueToServer(lowercaseTopic, {
                             // value: value,
-                            value: e.data,
+                            value: value,
                             unit: deviceComponent.unit
                         });
                     }
