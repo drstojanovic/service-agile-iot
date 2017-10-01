@@ -156,7 +156,17 @@ Devices.subscribeToDeviceTopic = function(deviceId, topic) {
             stream.onmessage = function(e) {
                 if (typeof e.data === 'string') {
                     console.log("Received: '" + e.data + "'");
-                    var deviceComponent = e.data;
+                    var deviceComponent = {
+                        value: 0,
+                        unit: '_'
+                    }
+                    try {
+                        deviceComponent = JSON.parse(e.data);
+                    } catch (e) {
+                        console.log('failed parsing read value');
+                        return;
+                    }
+
                     var value = parseFloat(deviceComponent.value);
                     value = round(value, 2);
 
