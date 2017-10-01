@@ -135,7 +135,10 @@ Devices.register = function(agile, device, type, cb) {
             return;
         }
 
+        console.log(response);
+
         console.log('New device registered');
+        newDevice = data;
         console.log(newDevice);
         newDevice.type = type;
 
