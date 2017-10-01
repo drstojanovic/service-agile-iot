@@ -43,7 +43,9 @@ Firebase.on(HOUSE_ID + '/registered', function(newRegistered) {
 });
 
 //Turn on discovery right away
-Devices.startDiscovery(agile);
+Devices.startDiscovery(agile, function() {
+    console.log('Discovery turned on on init');
+});
 
 Firebase.onCommand(HOUSE_ID, function(command) {
     if (command.type === 'discovery_on') {

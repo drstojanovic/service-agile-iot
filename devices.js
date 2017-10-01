@@ -39,7 +39,7 @@ Devices.startDiscovery = function startDiscovery(agile, cb) {
             // keep trying to turn on discovery
             setTimeout(function() {
                 console.log('retrying');
-                Devices.startDiscovery(agile);
+                Devices.startDiscovery(agile, cb);
             }, 1000);
         });
 };
@@ -117,7 +117,7 @@ Devices.connect = function(agile, id, streams) {
             if (!streams) {
                 return;
             }
-            
+
             //Subscribe to all streams
             console.log('Subscribe to all streams of device');
             for (var j = 0; j < streams.length; j++) {
