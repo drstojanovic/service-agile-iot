@@ -26,13 +26,18 @@ var startReading = function() {
     //         Devices.unsubscribe(id, oldRegistered[k].streams[p].id);
     //     }
     // }
-    
+
     console.log('start reading from devices');
     console.log(registered);
 
-    for (var i = 0; i < registered.length; i++) {
-        Devices.connect(agile, registered[i].deviceId, registered[i].streams);
+    for (var k in registered) {
+        if (registered.hasOwnProperty(k)) {
+            Devices.connect(agile, registered[k].deviceId, registered[i].streams);
+        }
     }
+    // for (var i = 0; i < registered.length; i++) {
+    //     Devices.connect(agile, registered[i].deviceId, registered[i].streams);
+    // }
 
     oldRegistered = registered;
 };
