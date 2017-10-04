@@ -35,11 +35,11 @@ var startReading = function() {
 
     for (var k in registered) {
         if (registered.hasOwnProperty(k)) {
-            Devices.connect(agile, registered[k].address, registered[k].streams);
+            Devices.connect(agile, registered[k].deviceId, registered[k].streams);
         }
     }
     // for (var i = 0; i < registered.length; i++) {
-    //     Devices.connect(agile, registered[i].address, registered[i].streams);
+    //     Devices.connect(agile, registered[i].deviceId, registered[i].streams);
     // }
 
     oldRegistered = registered;
@@ -54,7 +54,7 @@ var registerDevices = function(registered) {
             var device = {
                 name: registered[k].name,
                 protocol: registered[k].protocol,
-                id: registered[k].address
+                id: registered[k].deviceId
             };
             Devices.register(agile, device, registered[k].type);
         }
