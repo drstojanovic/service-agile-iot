@@ -24,7 +24,7 @@ var startReading = function() {
 
     // //Unsubscribe first
     // for (var k = 0; k < oldRegistered.length; k++) {
-    //     var id = oldRegistered[k].deviceId;
+    //     var id = oldRegistered[k].address;
     //     for (var p = 0; p < oldRegistered[k].streams.length; p++) {
     //         Devices.unsubscribe(id, oldRegistered[k].streams[p].id);
     //     }
@@ -35,11 +35,11 @@ var startReading = function() {
 
     for (var k in registered) {
         if (registered.hasOwnProperty(k)) {
-            Devices.connect(agile, registered[k].deviceId, registered[k].streams);
+            Devices.connect(agile, registered[k].address, registered[k].streams);
         }
     }
     // for (var i = 0; i < registered.length; i++) {
-    //     Devices.connect(agile, registered[i].deviceId, registered[i].streams);
+    //     Devices.connect(agile, registered[i].address, registered[i].streams);
     // }
 
     oldRegistered = registered;
@@ -49,12 +49,13 @@ var registerDevices = function(registered) {
 
     for (var k in registered) {
         if (registered.hasOwnProperty(k)) {
+
             //DevicesFound might be empty in devices.js
             var device = {
                 name: registered[k].name,
                 protocol: registered[k].protocol,
-                id: registered[k].deviceId
-            }
+                id: registered[k].address
+            };
             Devices.register(agile, device, registered[k].type);
         }
     }
