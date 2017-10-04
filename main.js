@@ -45,6 +45,8 @@ var startReading = function() {
     oldRegistered = registered;
 };
 
+var tryToRead3Times = 3;
+var readTimeout = null;
 var registerDevices = function(registered) {
 
     for (var k in registered) {
@@ -59,7 +61,11 @@ var registerDevices = function(registered) {
             Devices.register(agile, device, registered[k].type);
         }
     }
-    setTimeout(function() {
+    readTimeout = setTimeout(function() {
+        if (tryToRead3Times < 1) {
+            clearTimeout(readTimeout);
+        }
+        tryToRead3Times--;
         startReading();
     }, 3 * 1000);
 };
