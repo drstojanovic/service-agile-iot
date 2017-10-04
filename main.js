@@ -96,7 +96,7 @@ Firebase.onCommand(HOUSE_ID, function(command) {
 });
 
 //Set online/offline statuses
-var deviceRef = database.ref(path + '/device');
+var deviceRef = Firebase.database.ref(path + '/device');
 deviceRef.update({
     onlineState: true
 });

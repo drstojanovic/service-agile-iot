@@ -11,6 +11,8 @@ var database = firebase.database();
 
 Firebase = {};
 
+Firebase.database = database;
+
 Firebase.readOnce = function(path, cb) {
     database.ref(path).once('value')
         .then(function(snapshot) {
