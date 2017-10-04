@@ -94,3 +94,12 @@ Firebase.onCommand(HOUSE_ID, function(command) {
         startReading();
     }
 });
+
+//Set online/offline statuses
+var deviceRef = database.ref(path + '/device');
+deviceRef.update({
+    onlineState: true
+});
+deviceRef.onDisconnect().update({
+    onlineState: false
+});
