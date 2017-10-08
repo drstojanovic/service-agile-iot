@@ -30,9 +30,6 @@ var startReading = function() {
     //     }
     // }
 
-    console.log('start reading from devices');
-    console.log(registered);
-
     for (var k in registered) {
         if (registered.hasOwnProperty(k)) {
             Devices.connect(agile, registered[k].deviceId, registered[k].streams);
